@@ -15,7 +15,7 @@ import time
 from simple_timer import SimpleTimer
 from pyboard import PyboardError
 
-APP_NAME = "ESP MicroPython Setup Utility (v1.0.6)"
+APP_NAME = "ESP MicroPython Setup Utility (v1.0.7)"
 
 CHIPS = [
     "esp8266",
