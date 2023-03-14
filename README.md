@@ -1,6 +1,8 @@
 # ESP MicroPython Setup Utility
 A utility for flashing firmware images of micro python to the ESP32/8266 and for uploading software to the filesystem.
 
+![alt text](https://github.com/seth-c-stenzel/ESP-MicroPython-Setup-Utility/blob/main/screenshots/ESP%20MicroPython%20Setup%20Utility.jpg?raw=true)
+
 ## INTRO
 This utility is meant as an easy way to flash new firmware images to an ESP as well as easily upload MicroPython files to that board after.
 It is a simple GUI for flashing and uploading software packages which some could find useful, especially when distributing MicroPython packages.
