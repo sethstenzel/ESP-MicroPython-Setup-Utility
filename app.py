@@ -37,6 +37,8 @@ COMMON_COM_CHIP_SAFE_BAUD_RATES = {
     "ch340": 921600,
 }
 
+FLASH_OFFSETS = ["0x0", "0x1000"]
+
 # This has to do with how pyinstaller links files
 if hasattr(sys, "_MEIPASS"):
     app_icon = sys._MEIPASS + "/logo.ico"
@@ -95,21 +97,28 @@ layout = [
             file_types=(("Software Package", "*.zip"),),
         ),
     ],
-    [sg.Text("Chip Select & Firmware Flashing Baud Rate", font=("Courier New", 12))],
+    [sg.Text("Chip Select   Baud Rate     Flash Offset", font=("Courier New", 12))],
     [
         sg.Combo(
             CHIPS,
             default_value=CHIPS[0],
             font=("Courier New", 10),
-            size=(20, 1),
+            size=(14, 1),
             key="chip",
         ),
         sg.Combo(
             BAUD_RATES,
             default_value=default_baud_rate or 115200,
             font=("Courier New", 10),
-            size=(20, 1),
+            size=(14, 1),
             key="baud_rate",
+        ),
+        sg.Combo(
+            FLASH_OFFSETS,
+            default_value="0x0",
+            font=("Courier New", 10),
+            size=(14, 1),
+            key="flash_offset",
         ),
     ],
     [
@@ -193,6 +202,7 @@ while True:
                 print("Flashing NEW firmware.\n")
                 window["output"].update("Flashing NEW firmware.\n", append=True)
                 window.refresh()
+                flash_offset = values["flash_offset"]
                 if str(values["chip"]).lower() == "esp8266":
                     chip = "esp8266"
                     esptool_command = [
@@ -207,11 +217,10 @@ while True:
                         "dout",
                         "--flash_size",
                         "detect",
-                        "0",
+                        f"{flash_offset}",
                         firmware,
                     ]
                 else:
-                    mem_offset = "0x1000"
                     chip = str(values["chip"]).lower()
                     esptool_command = [
                         "--baud",
@@ -222,7 +231,7 @@ while True:
                         f"{chip}",
                         "write_flash",
                         "-z",
-                        f"{mem_offset}",
+                        f"{flash_offset}",
                         firmware,
                     ]
 
