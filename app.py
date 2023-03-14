@@ -99,7 +99,7 @@ layout = [
     [
         sg.Combo(
             CHIPS,
-            default_value=CHIPS[1],
+            default_value=CHIPS[0],
             font=("Courier New", 10),
             size=(20, 1),
             key="chip",
