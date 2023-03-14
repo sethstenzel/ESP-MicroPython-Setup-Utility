@@ -19,6 +19,6 @@ This utility can be used to flash firmware only, a software package only, which 
 3. Select your firmware file.
 4. Select a software package, if any. (see notes below)
 5. If not flashing firmware, check the software-only checkbox.
-6. If flashing an 8266, select the 8266 checkbox (adjusts the flash offset value.)
+6. Select your board from the drop down, or input it yourself.
 7. Click install
 
