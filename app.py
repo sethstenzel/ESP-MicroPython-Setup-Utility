@@ -31,6 +31,12 @@ CHIPS = [
     "esp32c6",
 ]
 
+BAUD_RATES = [9600, 19200, 28800, 38400, 57600, 115200, 230400, 460800, 576000, 921600]
+
+COMMON_COM_CHIP_SAFE_BAUD_RATES = {
+    "ch340": 921600,
+}
+
 # This has to do with how pyinstaller links files
 if hasattr(sys, "_MEIPASS"):
     app_icon = sys._MEIPASS + "/logo.ico"
@@ -41,14 +47,20 @@ else:
 sg.theme("SystemDefault")
 
 com_ports_available = list()
-default_com_port = ""
+default_com_port = None
+default_baud_rate = None
 for com_port_entry in get_com_ports():
     com_ports_available.append(
         f"{com_port_entry[0]}{(5 - len(com_port_entry[0])) * ' '} : {com_port_entry[1]}"
     )
 for port in com_ports_available:
-    if "CH340" in port:
+    if "CH340" in port.upper():
         default_com_port = port
+        default_baud_rate = 921600
+        break
+    elif "CP210" in port.upper():
+        default_com_port = port
+        default_baud_rate = 921600
         break
     else:
         default_com_port = com_ports_available[0]
@@ -83,7 +95,7 @@ layout = [
             file_types=(("Software Package", "*.zip"),),
         ),
     ],
-    [sg.Text("Chip Select", font=("Courier New", 12))],
+    [sg.Text("Chip Select & Firmware Flashing Baud Rate", font=("Courier New", 12))],
     [
         sg.Combo(
             CHIPS,
@@ -91,7 +103,14 @@ layout = [
             font=("Courier New", 10),
             size=(20, 1),
             key="chip",
-        )
+        ),
+        sg.Combo(
+            BAUD_RATES,
+            default_value=default_baud_rate or 115200,
+            font=("Courier New", 10),
+            size=(20, 1),
+            key="baud_rate",
+        ),
     ],
     [
         sg.Checkbox(
@@ -152,9 +171,13 @@ while True:
                 print("Erasing Flash.\n")
                 window["output"].update("Erasing Flash.\n", append=True)
                 window.refresh()
+                if str(values["baud_rate"]) in str(BAUD_RATES):
+                    baud_rate = values["baud_rate"]
+                else:
+                    baud_rate = 115200
                 esptool_command = [
                     "--baud",
-                    "921600",
+                    f"{ baud_rate }",
                     "--port",
                     port,
                     "erase_flash",
@@ -172,10 +195,9 @@ while True:
                 window.refresh()
                 if str(values["chip"]).lower() == "esp8266":
                     chip = "esp8266"
-                    baud = 460800
                     esptool_command = [
                         "--baud",
-                        f"{baud}",
+                        f"{baud_rate}",
                         "--port",
                         port,
                         "--chip",
@@ -191,10 +213,9 @@ while True:
                 else:
                     mem_offset = "0x1000"
                     chip = str(values["chip"]).lower()
-                    baud = 921600
                     esptool_command = [
                         "--baud",
-                        f"{baud}",
+                        f"{baud_rate}",
                         "--port",
                         port,
                         "--chip",
