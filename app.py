@@ -236,6 +236,7 @@ while True:
                     ]
 
                 timer.start()
+                print(*esptool_command)
                 esptool.main(esptool_command)
                 print(f"\nFirmware flashed in: {(timer.end_with_results()):.1f}s\n")
                 print("FIRMWARE FLASH SUCCESSFUL!\n\n")
