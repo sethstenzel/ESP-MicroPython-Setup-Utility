@@ -257,10 +257,10 @@ while True:
 
             if "esp32c3" in chip.lower():
                 print(
-                    f"\n{'#' * 60}\nWARNING: esp32c3 chip detected, unable to force reboot"
+                    f"\n\n{'#' * 80}\nWARNING: esp32c3 chip detected, unable to force reboot, but reboot/reset required!"
                 )
                 print(
-                    "\nPlease unplug and replug device and then\nhit ENTER to continue with software upload."
+                    "\nPlease press the reset button, or unplug and replug device and then\nhit ENTER to continue with software upload."
                 )
                 input()
 
