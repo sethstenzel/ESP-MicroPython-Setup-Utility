@@ -15,7 +15,7 @@ import time
 from simple_timer import SimpleTimer
 from pyboard import PyboardError
 
-APP_NAME = "ESP MicroPython Setup Utility (v1.0.7)"
+APP_NAME = "ESP MicroPython Setup Utility (v1.0.8)"
 
 CHIPS = [
     "esp8266",
@@ -242,6 +242,7 @@ while True:
                 print("FIRMWARE FLASH SUCCESSFUL!\n\n")
                 window["output"].update("FIRMWARE FLASH SUCCESSFUL!\n\n", append=True)
                 window.refresh()
+
             print("Uploading software package.\n")
             window["output"].update("Uploading software package.\n", append=True)
 
@@ -253,6 +254,15 @@ while True:
                 window.refresh()
                 window.UnHide()
                 continue
+
+            if "esp32c3" in chip.lower():
+                print(
+                    f"\n{'#' * 60}\nWARNING: esp32c3 chip detected, unable to force reboot"
+                )
+                print(
+                    "\nPlease unplug and replug device and then\nhit ENTER to continue with software upload."
+                )
+                input()
 
             zf = ZipFile(software)
             timer.start()
